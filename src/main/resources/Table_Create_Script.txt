@@ -1,0 +1,13 @@
+member 테이블 생성
+create table member(
+    idx number not null constraint member_idx_pk primary key,
+    id varchar2(8) not null constraint member_id_uk unique,
+    pass varchar2(8) not null,
+    name varchar2(20) not null,
+    email varchar2(50),
+    age number,
+    weight number,
+    regdate date default sysdate, 
+    cnt number default 0
+);
+
