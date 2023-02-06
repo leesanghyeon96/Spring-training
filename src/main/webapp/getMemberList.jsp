@@ -71,7 +71,7 @@ List<MemberDTO> memberList = (List) session.getAttribute("memberList");
 		</table>
 	
 		<p/>
-		<a href="insertBoard.jsp">새글 등록</a>
+		<a href="insertMember.jsp">회원정보 등록</a>
 
 	</form>
 	

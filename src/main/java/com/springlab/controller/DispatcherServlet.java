@@ -111,6 +111,7 @@ public class DispatcherServlet extends HttpServlet {
 			
 			//1. 클라이언트의 넘긴 변수 값 받기 ("idx")
 			String idx = request.getParameter("idx");
+		
 			
 			System.out.println("폼에서 넘긴 변수 idx 값 출력 : " + idx);
 			
@@ -122,7 +123,7 @@ public class DispatcherServlet extends HttpServlet {
 			dto.setIdx(Integer.parseInt(idx));
 			
 			//리턴을 받아온다.
-			MemberDTO member = dao.getmember(dto);
+			MemberDTO member = dao.getmember(dto);	//getmember=>DAO에서 함수 호출
 			
 			//DB의 값이 저장된 DTO (board)를 session 변수에 할당해서 뷰 페이지로 전달
 			HttpSession session = request.getSession();
@@ -133,29 +134,69 @@ public class DispatcherServlet extends HttpServlet {
 			
 			
 			
-		}/*else if(path.equals("/updateMember.do")) {
+		}else if(path.equals("/updateMember.do")) {	//*******
 			System.out.println("글 수정 처리");
 			//MEMBER_UPDATE = "update member set email=?, age=?, 
 			//weight=? where idx =?";
 			//1. 클라이언트에서 넘어오는 변수를 받음
-			String email = request.getParameter("emaili");
-			int age = Integer.parseInt(request.getParameter("age"));
-			double weight = double.valueof("weight");
-			int idx = Integer.parseInt(request.getParameter("idx"));
 			
-			MemberDAO dao = new MemberDAO();
+			String idx = request.getParameter("idx");
+			String email = request.getParameter("email");
+			String age = request.getParameter("age");
+			String weight = request.getParameter("weight");
+			
 			MemberDTO dto = new MemberDTO();
 			
-			dto.setIdx(idx);
-			dto.setAge(age);
+			dto.setIdx(Integer.parseInt(idx));
 			dto.setEmail(email);
-			dto.setWeight(weight);
+			dto.setAge(Integer.parseInt(age));
+			dto.setWeight(Double.valueOf(weight));
+			
+			MemberDAO dao = new MemberDAO();
 			
 			dao.updateMember(dto);
 			
 			response.sendRedirect("getMemberList.do");
 			
-		}*/
+		}else if (path.equals("/deleteMember.do")) {
+			System.out.println("글 삭제 처리");
+			
+			//1. idx
+			String idx = request.getParameter("idx");
+			
+			//2. DTO, DAO 
+			MemberDAO dao = new MemberDAO();
+			MemberDTO dto = new MemberDTO();
+			dto.setIdx(Integer.parseInt(idx));
+			dao.deleteMember(dto);
+			
+			//3. 삭제 후 View페이지로 이동
+			response.sendRedirect("getMemberList.do");
+			
+		}else if(path.equals("/insertMember.do")) {
+			System.out.println("member 테이블의 값을 저장");
+			
+			//1. insertMember페이지에서 넘어오는 값을 새로운 변수에 저장
+			String id = request.getParameter("id");
+			String pass = request.getParameter("pass");
+			String name = request.getParameter("name");
+			String email = request.getParameter("email");
+			String age = request.getParameter("age");
+			String weight = request.getParameter("weight");
+			
+			MemberDTO dto = new MemberDTO();
+			dto.setId(id);
+			dto.setPass(pass);
+			dto.setName(name);
+			dto.setEmail(email);
+			dto.setAge(Integer.parseInt(age));
+			dto.setWeight(Double.valueOf(weight));
+			MemberDAO user = new MemberDAO();
+			user.insertMember(dto);
+			
+			response.sendRedirect("getMemberList.do");
+			
+		}
 		
 		
 		

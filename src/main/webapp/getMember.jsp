@@ -15,7 +15,7 @@
 	<h1>회원정보 상세 페이지</h1>
 	
 	<center>
-	<h1>글 상세 페이지</h1>
+	<h1>회원정보 상세 페이지</h1>
 	<a href="Logout.do">Log-out</a>
 	<hr>
 	<!-- 폼의 value에 출력 -->
@@ -44,16 +44,16 @@
 			</tr>
 			<tr>
 				<td bgcolor="orange">이메일 : </td> <!-- 수정 -->
-				<td><input type="text" name="title" value="<%= member.getEmail()%>"></td>
+				<td><input type="text" name="email" value="<%= member.getEmail()%>"></td>
 			</tr>
 						<tr>
 				<td bgcolor="orange">나이 : </td> <!-- 수정 -->
-				<td><input type="text" name="title" value="<%= member.getAge()%>"></td>
+				<td><input type="text" name="age" value="<%= member.getAge()%>"></td>
 			</tr>
 			
 						<tr>
 				<td bgcolor="orange">몸무게 : </td> <!-- 수정 -->
-				<td><input type="text" name="title" value="<%= member.getWeight()%>"></td>
+				<td><input type="text" name="weight" value="<%= member.getWeight()%>"></td>
 			</tr>
 			
 						<tr>
@@ -74,9 +74,9 @@
 	</form>
 	<p>
 	<!-- do : controller에서 쿼리의 실행이 필요할 것들 -->
-	<a href="insertMember.jsp">글 등록</a> &nbsp;&nbsp;&nbsp;
-	<a href="deleteMember.do?seq=<%= member.getIdx()%>">글 삭제</a> &nbsp;&nbsp;&nbsp;
-	<a href="getMember.do">글 목록</a>
+	<a href="insertMember.do">글 등록</a> &nbsp;&nbsp;&nbsp;
+	<a href="deleteMember.do?idx=<%= member.getIdx()%>">글 삭제</a> &nbsp;&nbsp;&nbsp;
+	<a href="getMemberList.do">글 목록</a>
 	
 </center>
 </body>

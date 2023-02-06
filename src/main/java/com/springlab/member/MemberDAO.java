@@ -25,9 +25,9 @@ public class MemberDAO {
 	private ResultSet rs = null;
 	
 	//2. SQL 쿼리를 담는 상수에 담아서 처리, 변수 생성후 할당 : 상수명 : 전체 대문자로 사용 
-	private final String MEMBER_INSERT = "insert into member (idx, id, pass, name, email, age, weight) values( (select nvl(max(idx),0)+1 from member),?,?,?,?,?,?)";
+	private final String MEMBER_INSERT = "insert into member (idx, id, pass, name, email, age, weight, regdate, cnt) values( (select nvl(max(idx),0)+1 from member),?,?,?,?,?,?,sysdate,default)";
 	private final String MEMBER_UPDATE = "update member set email=?, age=?, weight=? where idx =?";
-	private final String MEMBER_DELETE = "select * from member where idx=?";
+	private final String MEMBER_DELETE = "delete member where idx=?";
 	private final String MEMBER_GET = "select * from member where idx= ?";
 	private final String MEMBER_LIST = "select * from member order by idx desc";
 	
@@ -98,6 +98,8 @@ public class MemberDAO {
 		
 		try {
 			conn = JDBCUtil.getConnection();
+			//MEMBER_INSERT = "insert into member (idx, id, pass, name, email, age, weight,) 
+			//values( (select nvl(max(idx),0)+1 from member),?,?,?,?,?,?, sysdate, default)";
 			pstmt = conn.prepareStatement(MEMBER_INSERT);
 			
 			//pstmt 에 ? 변수값 할당
@@ -127,6 +129,7 @@ public class MemberDAO {
 		try {
 			//객체 생성
 			conn = JDBCUtil.getConnection();
+			//MEMBER_UPDATE = "update member set email=?, age=?, weight=? where idx=?";
 			pstmt = conn.prepareStatement(MEMBER_UPDATE);
 			
 			//글 수정하는 변수값 할당
@@ -149,29 +152,30 @@ public class MemberDAO {
 	
 	//3-3 글 삭제 처리 메소드 : deleteMember()
 	public void deleteMember(MemberDTO dto) {
-		System.out.println();
+		System.out.println("==> JDBC로 deleteMember() 기능처리 - 시작");
 		
 		try {
 			//객체 생성
 			conn = JDBCUtil.getConnection();
+			//MEMBER_DELETE = "delete member where idx=?";
 			pstmt = conn.prepareStatement(MEMBER_DELETE);
 			
 			pstmt.setInt(1, dto.getIdx());
 			
 			pstmt.executeUpdate();
 			
-			System.out.println("==> JDBC로 updateBoard() 기능처리 - 완료");
+			System.out.println("==> JDBC로 updateMember() 기능처리 - 완료");
 			
 		}catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("==> JDBC로 updateBoard() 기능처리 - 실패");
+			System.out.println("==> JDBC로 updateMember() 기능처리 - 실패");
 		}finally {
 			JDBCUtil.close(pstmt, conn); 
 		}
 	}
 	
 	//3-4 글 상세 조회 처리 메소드 : getMember() : 레코드 1개를 DB에서 select 해서 DTO 객체에 담아서 리턴
-	public MemberDTO getMember(MemberDTO dto) {
+	public MemberDTO getmember(MemberDTO dto) {
 		System.out.println("==> JDBC로 getMember() 시작");
 		
 		MemberDTO member = new MemberDTO();
@@ -203,52 +207,12 @@ public class MemberDAO {
 			
 		}catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("JDBC로 쿼리 실행중 오류발생");
+			System.out.println("JDBC로 쿼리 실행중 오류발생1");
 		}finally {
 			JDBCUtil.close(rs, pstmt, conn);
 		}
 		
-		
-		
-		
-		/*
-		System.out.println("==> JDBC로 getMember() 기능처리 - 시작");
-		memberDTO member = new memberDTO();
-		
-		try {
-			System.out.println("==> JDBC로 getMember");
-			conn = JDBCUtil.getConnection();
-			pstmt = conn.prepareStatement(MEMBER_GET);
-			
-			pstmt.setString(1, dto.getid());
-			pstmt.setString(2, dto.getpass());
-			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				member.setidx(rs.getInt("IDX"));
-				member.setid(rs.getString("ID"));
-				member.setpass(rs.getString("PASS"));
-				member.setname(rs.getString("NAME"));
-				member.setemail(rs.getString("EMAIL"));
-				member.setage(rs.getInt("AGE"));
-				member.setweight(rs.getDouble("WEIGHT"));
-				member.setregdate(rs.getDate("REGDATE"));
-				member.setcnt(rs.getInt("CNT"));
-				
-			}else {
-				System.out.println("레코드의 결과가 없습니다. ");
-			}
-			System.out.println("==> JDBC로 getBoard() 기능처리 - 완료");
-
-		}catch (Exception e){
-			e.printStackTrace();
-			System.out.println("==> JDBC로 getBoard() 기능처리 - 실패");
-			System.out.println("==> JDBC로 getBoard() 기능처리 - 실패");
-		}finally {
-			JDBCUtil.close(rs, pstmt, conn);
-		}
-		*/		return member;
+				return member;
 		
 	}
 	
@@ -297,16 +261,19 @@ public class MemberDAO {
 	
 	
 	//3-6 로그인 처리 메소드
-	public MemberDTO getmember(MemberDTO dto) {
+	public MemberDTO getUser(MemberDTO dto) {
 		MemberDTO member = new MemberDTO();
+		
+		System.out.println("DAO 로 변수값이 잘넘어노는지 확인 (idx)" + dto.getIdx());
 		
 		try {
 			System.out.println("==> JDBC로 getUser() 시작");
 			conn = JDBCUtil.getConnection();
+			// MEMBER_GET = "select * from member where idx= ?";
 			pstmt = conn.prepareStatement(MEMBER_GET);
 			
 			pstmt.setString(1, dto.getId());
-			pstmt.setString(2, dto.getPass());
+			pstmt.setString(1, dto.getPass());
 			
 			rs = pstmt.executeQuery();
 			
@@ -329,7 +296,7 @@ public class MemberDAO {
 
 		}catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("JDBC로 쿼리 실행중 오류발생");
+			System.out.println("JDBC로 쿼리 실행중 오류발생2");
 		}finally {
 			JDBCUtil.close(rs, pstmt, conn);
 		}
